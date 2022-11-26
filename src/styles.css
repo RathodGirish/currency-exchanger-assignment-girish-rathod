@@ -1,0 +1,157 @@
+/* You can add global styles to this file, and also import other style files */
+
+.main-panel {
+  background: rgba(203, 203, 210, 0.15);
+  position: relative;
+  z-index: 2;
+  float: right;
+  width: calc(100% - 260px);
+  min-height: 100%;
+  overflow: auto;
+}
+
+.main-panel .main-content {
+  padding: 30px 15px;
+  min-height: calc(100% - 123px);
+}
+
+.container-fluid {
+  padding: 0 15px;
+  width: 98%;
+  margin: 0 auto;
+}
+
+.row {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  word-wrap: break-word;
+}
+
+.column-12 {
+  width: 100%;
+  flex: 0 0 auto;
+}
+
+.column-2 {
+  width: 16.6667%;
+  flex: 0 0 auto;
+}
+
+.column-3 {
+  width: 25%;
+  flex: 0 0 auto;
+}
+
+.column-4 {
+  width: 33.3334%;
+  flex: 0 0 auto;
+}
+
+.column-5 {
+  width: 41.6667%;
+  flex: 0 0 auto;
+}
+
+.column-6 {
+  width: 50%;
+  flex: 0 0 auto;
+}
+
+.column-8 {
+  width: 66.6667%;
+  flex: 0 0 auto;
+}
+
+.column-10 {
+  width: 83.3334%;
+  flex: 0 0 auto;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  border-radius: 10px;
+  background-color: #ffffff;
+  background-clip: border-box;
+  border: 1px solid #00000020
+}
+
+.card-content {
+  flex: 1 1 auto;
+  padding: 16px;
+}
+
+.button-blue {
+  color: #ffffff;
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+  height: 35px;
+}
+
+.invalid-text {
+  color: red;
+}
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.box-panel {
+  margin-top: 5px;
+  width: 90%;
+  display: block;
+  line-height: 1.5;
+  padding: 6px;
+  font-size: 16px;
+  font-weight: 400;
+  border-radius: 5px;
+  appearance: none;
+  background: #ffffff;
+  color: #000000;
+  border: 1px solid #aeaeae54;
+  /* transition: border-color .10s ease-in-out,box-shadow .10s ease-in-out; */
+}
+
+.m-y-3 {
+  margin: 10px 0;
+}
+.m-y-2 {
+  margin: 0.5rem 0;
+}
+.m-x-2 {
+    margin: 0 0.5rem;
+}
+.full-width{
+    width: 100%;
+}
+.tri-width{
+    width: 33.33%
+}
+
+
+.my-10{
+    margin-top: 10px;
+}
+
+.px-3{
+    /* padding: 0 1rem; */
+}
+
+.w-97{
+    width: 97%;
+}
+
+.w-94{
+    width: 94%;
+}
+
+.btn-trans{
+    padding: 5px;
+    background: transparent;
+}
+

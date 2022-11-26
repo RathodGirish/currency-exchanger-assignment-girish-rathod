@@ -1,0 +1,14 @@
+.logo{
+    width: auto !important;
+    height: 40px !important;
+    padding: 3px 10px;
+}
+.row{
+    width: 100% !important;
+}
+.icon{
+    flex: 1 !important;
+}
+.m-r-15{
+    margin-right: 15px;
+}

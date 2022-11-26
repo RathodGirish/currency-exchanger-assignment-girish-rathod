@@ -1,0 +1,98 @@
+<div class="content">
+    <form [formGroup]="currencyExchangerForm" novalidate>
+        <div class="box-body">
+            <div class="card">
+                <div class="card-content">
+                    <div class="row">
+                        <div class="column-4">
+                            <div class="form-group">
+                                <label> Amount <span class="invalid-text">&nbsp;*</span></label>
+                                <input type="text" formControlName="amount" class="box-panel text-center"
+                                    placeholder="Enter Amount" (keypress)="commonService.numberOnly($event)" required
+                                    [ngClass]="{ 'is-invalid': submitted && frm.amount.errors }" />
+
+                                <div *ngIf="submitted && frm.amount.errors" class="invalid-text">
+                                    <div *ngIf="frm.amount.errors.required">Amount is required
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column-8">
+                            <div class="row">
+                                <div class="column-5">
+                                    <div class="form-group">
+                                        <label for="from">
+                                            From
+                                            <span class="invalid-text cursor-pointer">&nbsp;*</span></label>
+                                        <select class="box-panel cursor-pointer text-right" formControlName="from"
+                                            placeholder="Select Currency" required
+                                            [ngClass]="{ 'is-invalid': submitted && frm.from.errors }">
+                                            <option disabled value="">Select Currency</option>
+                                            <option *ngFor="let code of currencyList" [value]="code.key">
+                                                {{ code.key }}
+                                            </option>
+                                        </select>
+
+                                        <div *ngIf="submitted && frm.from.errors" class="invalid-text">
+                                            <div *ngIf="frm.from.errors.required">
+                                                From value is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="column-2" style="text-align:center">
+                                    <img src="assets/images/transfer-icon.png" width="80" heigth="50"
+                                        (click)="onExchangerClick()">
+                                </div>
+                                <div class="column-5">
+                                    <div class="form-group">
+                                        <label for="to">
+                                            To <span class="invalid-text">&nbsp;*</span></label>
+                                        <select class="box-panel cursor-pointer text-right" formControlName="to"
+                                            placeholder="Select Currency" required
+                                            [ngClass]="{ 'is-invalid': submitted && frm.to.errors }">
+                                            <option disabled value="">Select Currency</option>
+                                            <option *ngFor="let code of currencyList" [value]="code.key">
+                                                {{ code.key }}
+                                            </option>
+                                        </select>
+                                        <div *ngIf="submitted && frm.to.errors" class="invalid-text">
+                                            <div *ngIf="frm.to.errors.required">
+                                                To value is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div class="column-8">
+                            <app-drop-down></app-drop-down>
+                        </div> -->
+                    </div>
+                    <div class="row my-2">
+                        <div class="column-4"></div>
+                        <div class="column-8">
+                            <div class="row p-x-3">
+                                <button class="button-blue w-97 m-y-10 cursor-pointer">Convert</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row m-y-2">
+                        <div class="column-4">
+                            <input type="text" class="box-panel text-center" placeholder="1.00 EUR=XX.XX USD" />
+                        </div>
+                        <div [ngClass]="!moreButtonShow ? 'column-4' : 'column-8'">
+                            <input type="text" class="box-panel text-center" [ngClass]="moreButtonShow ? 'w-96' : ''"
+                                placeholder="XX.XX USD" />
+                        </div>
+                        <div class="column-4" *ngIf="!moreButtonShow">
+                            <button class="button-blue w-94 m-y-10 cursor-pointer" (click)="onMoreDetails()">
+                                More Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

@@ -5,7 +5,7 @@ import { FormsModule, ReactiveFormsModule} from '@angular/forms'
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './shared/header/header.component';
-import { CommonService } from './services/index';
+import { CommonService, CurrencyExchangerService } from './services/index';
 
 @NgModule({
   declarations: [
@@ -19,7 +19,7 @@ import { CommonService } from './services/index';
     AppRoutingModule,
     HttpClientModule
   ],
-  providers: [CommonService],
+  providers: [CommonService, CurrencyExchangerService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CurrencyExchangerComponent } from './currency-exchanger.component';
+import { ExchangerCardComponent } from './exchanger-card.component';
 
-describe('CurrencyExchangerComponent', () => {
-  let component: CurrencyExchangerComponent;
-  let fixture: ComponentFixture<CurrencyExchangerComponent>;
+describe('ExchangerCardComponent', () => {
+  let component: ExchangerCardComponent;
+  let fixture: ComponentFixture<ExchangerCardComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CurrencyExchangerComponent ]
+      declarations: [ ExchangerCardComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CurrencyExchangerComponent);
+    fixture = TestBed.createComponent(ExchangerCardComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

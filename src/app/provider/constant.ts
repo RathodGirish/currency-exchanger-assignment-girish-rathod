@@ -4,7 +4,7 @@ export const CONSTANT = Object.freeze({
     JWT_TOKEN: "jwt_token",
     CURRENCY_LIST: "currencyList",
 
-    CURRENCY_SYMBOL_LIST:['EUR','AED','AUD','BTC','CAD','EGP','EUR','GBP','INR','SGD','JPY'],
+    CURRENCY_SYMBOL_LIST:['EUR','AED','AUD','BTC','CAD','EGP','GBP','INR','SGD'],
 
     CURRENCY_OBJ :{
     "AED": "United Arab Emirates Dirham",

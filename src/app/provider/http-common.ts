@@ -6,19 +6,14 @@ import { CONSTANT } from './constant';
 @Injectable()
 
 export class Connector {
-    constructor(private http: HttpClient) { }
+    constructor(protected http: HttpClient) { }
 
     /*
     TODO: post interceptor
     */
     Post(URL: any, Parameter: any) {
         var headers: any = { 'apikey': ENV.API_KEY };
-
-        return this.http.post(URL, Parameter, { headers }).subscribe((data: any) => {
-            return data.json();
-        }, (error: any) => {
-            return error;
-        });
+        return this.http.post(URL, Parameter, { headers })
     }
  
     /*
@@ -26,11 +21,6 @@ export class Connector {
     */
     Get(URL: any) {
         var headers: any = { 'apikey': ENV.API_KEY };
-
-        return this.http.get(URL, { headers }).subscribe((data: any) => {
-            return data.json();
-        }, (error) => {
-            return error;
-        });
+        return this.http.get(URL, { headers })
     }
 }

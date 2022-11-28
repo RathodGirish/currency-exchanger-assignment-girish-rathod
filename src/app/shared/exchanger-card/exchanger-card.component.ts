@@ -74,12 +74,13 @@ export class ExchangerCardComponent implements OnInit {
     this.currencyExchangerService.convertCurrency(formmData).subscribe(
       (async (data: any) => {
         if (data && data.success === true) {
+          this.enableMoreButton = true;
           this.amountChange.emit(formmData.amount);
           let obj = {
             "base":formmData.to,
             "symbols":CONSTANT.CURRENCY_SYMBOL_LIST.toString()
           }
-          this.currencyExchangerService.convertCurrency(obj).subscribe(
+          this.currencyExchangerService.getLatestSymbols(obj).subscribe(
             (async (data: any) => {
               if (data && data.success === true) {
                 this.convertAmount = data.result;
@@ -94,5 +95,4 @@ export class ExchangerCardComponent implements OnInit {
       })
     )
   }
-
 }

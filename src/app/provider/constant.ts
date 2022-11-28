@@ -1,9 +1,8 @@
 export const CONSTANT = Object.freeze({
-    SUCCESS: 'success',
-    FAIL: 'fail',
-    JWT_TOKEN: "jwt_token",
+    SUCCESS: 'Success',
+    FAIL: 'Fail',
     CURRENCY_LIST: "currencyList",
-    INVALID_FORM: "Invalid form value",
+    INVALID_FORM: "Required fields are missing",
     DATA_FOUND: "Data found successfully",
     SOMETHING_WENT_WRONG: "Something went wrong",
 

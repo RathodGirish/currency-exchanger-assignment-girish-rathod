@@ -17,6 +17,13 @@
 Run `ng test` to execute the unit tests.
 
 
+## Screenshorts
+
+`1. Home screen before converting - Default`
 ![Screenshot](Home-screen-before-convert.PNG)
+
+`2. Home screen after converting currency`
 ![Screenshot](Home-screen.PNG)
+
+`3. Detail screen after converting currency`
 ![Screenshot](Details-screen.PNG)

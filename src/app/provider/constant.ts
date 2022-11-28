@@ -3,6 +3,9 @@ export const CONSTANT = Object.freeze({
     FAIL: 'fail',
     JWT_TOKEN: "jwt_token",
     CURRENCY_LIST: "currencyList",
+    INVALID_FORM: "Invalid form value",
+    DATA_FOUND: "Data found successfully",
+    SOMETHING_WENT_WRONG: "Something went wrong",
 
     CURRENCY_SYMBOL_LIST:['EUR','AED','AUD','BTC','CAD','EGP','GBP','INR','SGD'],
 
@@ -175,5 +178,7 @@ export const CONSTANT = Object.freeze({
     "ZMK": "Zambian Kwacha (pre-2013)",
     "ZMW": "Zambian Kwacha",
     "ZWL": "Zimbabwean Dollar"
-  }
+  },
+
+  CHART_OBJ: {}
 })

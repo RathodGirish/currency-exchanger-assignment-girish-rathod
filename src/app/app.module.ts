@@ -6,6 +6,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './shared/header/header.component';
 import { CommonService, CurrencyExchangerService } from './services/index';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -15,9 +17,11 @@ import { CommonService, CurrencyExchangerService } from './services/index';
   imports: [
     FormsModule,
     ReactiveFormsModule,
+    BrowserAnimationsModule,
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    ToastrModule.forRoot()
   ],
   providers: [CommonService, CurrencyExchangerService],
   bootstrap: [AppComponent]

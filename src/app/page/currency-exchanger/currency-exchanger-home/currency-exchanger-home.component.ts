@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {CONSTANT} from "../../../provider/constant";
-import {CommonService, CurrencyExchangerService} from "../../../services/index";
+import { CONSTANT } from "../../../provider/constant";
+import { CommonService, CurrencyExchangerService } from "../../../services/index";
 
 @Component({
   selector: 'app-currency-exchanger-home',
@@ -9,6 +9,7 @@ import {CommonService, CurrencyExchangerService} from "../../../services/index";
 })
 export class CurrencyExchangerHomeComponent implements OnInit {
 
+  public amount: number = 1;
   public popularCurrency: any[] = [...CONSTANT.CURRENCY_SYMBOL_LIST]
   public popularCurrencyRates: any = {
     "AED": 3.673042,
@@ -22,15 +23,15 @@ export class CurrencyExchangerHomeComponent implements OnInit {
     "JPY": 139.12504,
     "SGD": 1.375704
   }
-  
+
   constructor(
-    public commonService:CommonService,
-    public currencyExchangerService:CurrencyExchangerService
+    public commonService: CommonService,
+    public currencyExchangerService: CurrencyExchangerService
   ) {
   }
 
   ngOnInit(): void {
-    this.setCurrencyDataIntoLocal()
+    // this.setCurrencyDataIntoLocal()
   }
 
   /*
@@ -39,11 +40,20 @@ export class CurrencyExchangerHomeComponent implements OnInit {
   public setCurrencyDataIntoLocal = async () => {
     this.currencyExchangerService.getAllSymbols().subscribe(
       (async (data: any) => {
-        console.log("newArray", data)
+        if (data && data.success === true) {
+          let obj = data.symbols
+          let currencyArray = this.commonService.objectToArray(obj)
+          this.commonService.setCurrencyIntoLocal(currencyArray)
+        }
       })
     );
-    let currencyArray = this.commonService.objectToArray(CONSTANT.CURRENCY_OBJ)
-    this.commonService.setCurrencyIntoLocal(currencyArray)
+  }
+
+  /*
+  TODO: method to set amount from child
+  */
+  public onAmountChange = async (event: any) => {
+    this.amount = event;
   }
 
 }

@@ -1,7 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import {CommonService} from '../../services/index'
+import {CommonService, CurrencyExchangerService } from '../../services/index'
+import { CONSTANT } from 'src/app/provider/constant';
 
 @Component({
   selector: 'exchanger-card',
@@ -10,29 +11,38 @@ import {CommonService} from '../../services/index'
 })
 export class ExchangerCardComponent implements OnInit {
 
-  @Input() moreButtonShow:any;
+  @Output() amountChange = new EventEmitter();
+  @Input() moreButtonShow: any;
   public currencyList: any[] = []
   public submitted: boolean = false;
+  public enableMoreButton: boolean = false;
+  public convertAmount: string = "";
+  public isDetailScreen: boolean = false;
   currencyExchangerForm: FormGroup = new FormGroup({});
 
-  constructor(private fb: FormBuilder, public commonService: CommonService, private router: Router) {
+  constructor(
+    private fb: FormBuilder,
+    public commonService: CommonService,
+    protected currencyExchangerService: CurrencyExchangerService,
+    private router: Router
+  ) {
     this.createForm();
-   }
+  }
 
   ngOnInit(): void {
-    this.commonService.getCurrencyFromLocal((data: any) =>{
+    this.isDetailScreen = this.moreButtonShow
+    this.commonService.getCurrencyFromLocal((data: any) => {
       this.currencyList = [...data]
-      console.log("list", this.currencyList)
     })
   }
 
   createForm() {
-		this.currencyExchangerForm = this.fb.group({
-			amount: ['', Validators.required],
-			from: ['EUR', Validators.required],
-			to: ['USD', Validators.required]			
-		});
-	}
+    this.currencyExchangerForm = this.fb.group({
+      amount: ['', Validators.required],
+      from: ['EUR', Validators.required],
+      to: ['USD', Validators.required]
+    });
+  }
   get frm() { return this.currencyExchangerForm.controls; }
 
   public onExchangerClick = () => {
@@ -44,12 +54,45 @@ export class ExchangerCardComponent implements OnInit {
   }
   public onMoreDetails = () => {
     const formmData = this.currencyExchangerForm.value;
-    console.log(this.currencyExchangerForm.invalid)
-    if(!this.currencyExchangerForm.invalid) {
+    if (!this.currencyExchangerForm.invalid) {
       this.router.navigate([`/currency-exchanger/detail/${formmData.from}/${formmData.to}/${formmData.amount}`]);
     } else {
-      alert("Invalid form value");
+      this.commonService.showFailNotification(CONSTANT.FAIL,CONSTANT.INVALID_FORM);
     }
   }
-  
+  public getValue = () => {
+    if(this.convertAmount) {
+      const formmData = this.currencyExchangerForm.value;
+      let value = `${formmData.amount}.00 ${formmData.from}=${this.convertAmount} ${formmData.to}`
+      return value.toString()
+    }
+    return ''
+  }
+
+  public onConvertButtonClick = () => {
+    const formmData = this.currencyExchangerForm.value;
+    this.currencyExchangerService.convertCurrency(formmData).subscribe(
+      (async (data: any) => {
+        if (data && data.success === true) {
+          this.amountChange.emit(formmData.amount);
+          let obj = {
+            "base":formmData.to,
+            "symbols":CONSTANT.CURRENCY_SYMBOL_LIST.toString()
+          }
+          this.currencyExchangerService.convertCurrency(obj).subscribe(
+            (async (data: any) => {
+              if (data && data.success === true) {
+                this.convertAmount = data.result;
+               } else {
+                this.commonService.showFailNotification(CONSTANT.FAIL, CONSTANT.SOMETHING_WENT_WRONG)
+              }
+             })
+           )
+        } else {
+          this.commonService.showFailNotification(CONSTANT.FAIL, CONSTANT.SOMETHING_WENT_WRONG)
+        }
+      })
+    )
+  }
+
 }

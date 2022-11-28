@@ -25,7 +25,7 @@
                                             From
                                             <span class="invalid-text cursor-pointer">&nbsp;*</span></label>
                                         <select class="box-panel cursor-pointer text-right" formControlName="from"
-                                            placeholder="Select Currency" required
+                                            placeholder="Select Currency" required [disabled]="isDetailScreen"
                                             [ngClass]="{ 'is-invalid': submitted && frm.from.errors }">
                                             <option disabled value="">Select Currency</option>
                                             <option *ngFor="let code of currencyList" [value]="code.key">
@@ -49,7 +49,7 @@
                                         <label for="to">
                                             To <span class="invalid-text">&nbsp;*</span></label>
                                         <select class="box-panel cursor-pointer text-right" formControlName="to"
-                                            placeholder="Select Currency" required
+                                            placeholder="Select Currency" required [disabled]="isDetailScreen"
                                             [ngClass]="{ 'is-invalid': submitted && frm.to.errors }">
                                             <option disabled value="">Select Currency</option>
                                             <option *ngFor="let code of currencyList" [value]="code.key">
@@ -65,28 +65,25 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- <div class="column-8">
-                            <app-drop-down></app-drop-down>
-                        </div> -->
                     </div>
                     <div class="row my-2">
                         <div class="column-4"></div>
                         <div class="column-8">
                             <div class="row p-x-3">
-                                <button class="button-blue w-97 m-y-10 cursor-pointer">Convert</button>
+                                <button type="button" class="button-blue w-97 m-y-10 cursor-pointer" [disabled]="currencyExchangerForm.invalid" (click)="onConvertButtonClick()">Convert</button>
                             </div>
                         </div>
                     </div>
-                    <div class="row m-y-2">
+                    <div class="row m-y-2 content-center">
                         <div class="column-4">
-                            <input type="text" class="box-panel text-center" placeholder="1.00 EUR=XX.XX USD" />
+                            <input type="text" class="box-panel text-center" placeholder="1.00 EUR=XX.XX USD" [value]='getValue()' />
                         </div>
                         <div [ngClass]="!moreButtonShow ? 'column-4' : 'column-8'">
-                            <input type="text" class="box-panel text-center" [ngClass]="moreButtonShow ? 'w-96' : ''"
+                            <input type="text" class="box-panel text-center card-height" [ngClass]="moreButtonShow ? 'w-96' : ''"
                                 placeholder="XX.XX USD" />
                         </div>
                         <div class="column-4" *ngIf="!moreButtonShow">
-                            <button class="button-blue w-94 m-y-10 cursor-pointer" (click)="onMoreDetails()">
+                            <button class="button-blue w-94 m-y-10 cursor-pointer" [disabled]="currencyExchangerForm.invalid || !enableMoreButton" (click)="onMoreDetails()">
                                 More Details
                             </button>
                         </div>

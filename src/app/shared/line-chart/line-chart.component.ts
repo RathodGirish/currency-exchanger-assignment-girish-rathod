@@ -1,6 +1,13 @@
 import { AfterViewInit, Component, ElementRef, ViewChild, Input } from '@angular/core';
 import Chart from 'chart.js/auto';
+import { CommonService} from "../../services/index"
 import * as moment from "moment";
+
+
+interface ChartObj {
+  monthYear:string,
+  rates: string[]
+}
 
 @Component({
   selector: 'app-line-chart',
@@ -11,15 +18,30 @@ export class LineChartComponent implements AfterViewInit {
   @Input() chartData:any;
   @ViewChild('lineCanvas') lineCanvas: ElementRef | undefined;
   lineChart: any;
+  public isChartShown:Boolean = false
 
-  constructor() {}
+  constructor(
+    public commonService: CommonService,
+  ) {}
 
-  ngAfterViewInit(): void {
-    this.lineChartMethod();
+  ngOnInit(): void {
+    if(!this.commonService.isObjEmpty(this.chartData['rates'])){
+      this.lineChartMethod();
+      this.isChartShown = true;
+    } 
   }
 
-  lineChartMethod() {
-    let months = this.getMonthYearList(new Date(this.chartData['start_date']),new Date(this.chartData['end_date']))
+  ngAfterViewInit(): void {
+    if(this.isChartShown == true){
+      this.lineChartMethod();
+    }
+  }
+
+  /*
+  * Method to load line chart data. 
+  */
+  lineChartMethod() : void {
+    let months = this.getMonthYearList(this.chartData['start_date'], this.chartData['end_date'])
     let rateData = this.getRateDataList(months)
     this.lineChart = new Chart(this.lineCanvas?.nativeElement, {
       type: 'line',
@@ -53,7 +75,10 @@ export class LineChartComponent implements AfterViewInit {
     });
   }
 
-  public getMonthYearList(d1:any, d2:any) {
+  /*
+  * Method to get month list of last 12 month from today. 
+  */
+  public getMonthYearList(d1:string, d2:string) : string[] {
 		let dateStart = moment(d1);
 		let dateEnd = moment(d2);
 		let timeValues = [];
@@ -65,10 +90,13 @@ export class LineChartComponent implements AfterViewInit {
 		return timeValues;
 	}
 
-  public getRateDataList(months:any) {
-    let list = months.map((str:any,index:any)=>({'monthYear':str,"rates":[]}));
+  /*
+  * To get rate value list of last 12 month from today. 
+  */
+  public getRateDataList(months: string[]) {
+    let list: ChartObj[] = months.map((str: string)=>({'monthYear':str,"rates":[]}));
     let rateData:any = [];
-    months.forEach((month:any,index:any) => {
+    months.forEach((month:string, index:number) => {
       for(const prop in this.chartData['rates']){
 		    const dateStart = moment(prop);
         let str = dateStart.format('MMM-YYYY');

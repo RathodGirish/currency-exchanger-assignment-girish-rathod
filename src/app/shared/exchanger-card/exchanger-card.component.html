@@ -7,7 +7,7 @@
                         <div class="column-4">
                             <div class="form-group">
                                 <label> Amount <span class="invalid-text">&nbsp;*</span></label>
-                                <input type="text" formControlName="amount" class="box-panel text-center"
+                                <input type="text" formControlName="amount" class="box-panel text-center" (keyup)="onCalculateValueChange()"
                                     placeholder="Enter Amount" (keypress)="commonService.numberOnly($event)" required
                                     [ngClass]="{ 'is-invalid': submitted && frm.amount.errors }" />
 
@@ -24,7 +24,7 @@
                                         <label for="from">
                                             From
                                             <span class="invalid-text cursor-pointer">&nbsp;*</span></label>
-                                        <select class="box-panel cursor-pointer text-right" formControlName="from"
+                                        <select class="box-panel cursor-pointer text-right" formControlName="from" (change)="onCalculateValueChange()"
                                             placeholder="Select Currency" required [disabled]="isDetailScreen"
                                             [ngClass]="{ 'is-invalid': submitted && frm.from.errors }">
                                             <option disabled value="">Select Currency</option>
@@ -47,7 +47,7 @@
                                     <div class="form-group">
                                         <label for="to">
                                             To <span class="invalid-text">&nbsp;*</span></label>
-                                        <select class="box-panel cursor-pointer text-right" formControlName="to"
+                                        <select class="box-panel cursor-pointer text-right" formControlName="to" (change)="onCalculateValueChange()"
                                             placeholder="Select Currency" required [disabled]="isDetailScreen"
                                             [ngClass]="{ 'is-invalid': submitted && frm.to.errors }">
                                             <option disabled value="">Select Currency</option>

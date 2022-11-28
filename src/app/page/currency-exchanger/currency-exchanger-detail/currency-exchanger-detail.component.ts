@@ -5,18 +5,37 @@ import { CurrencyExchangerService, CommonService } from '../../../services/index
 import * as moment from 'moment' 
 import { CONSTANT } from 'src/app/provider/constant';
 
+interface Chart {
+  base:string,
+  rates: {
+    [key: string]: {[key: string]:string}
+  },
+  end_date: string,
+  start_date:string,
+  success:boolean,
+  timeseries:boolean
+}
+
 @Component({
   selector: 'app-currency-exchanger-detail',
   templateUrl: './currency-exchanger-detail.component.html',
   styleUrls: ['./currency-exchanger-detail.component.css']
 })
 export class CurrencyExchangerDetailComponent implements OnInit {
- public amount: number = 0;
- public from: string ='';
- public to: string ='';
- public chartData: any;
- public currencyList: any[] = []
- public currencyFullName:any = "";
+  public amount: number = 0;
+  public from: string ='';
+  public to: string ='';
+  public chartData: Chart = {
+    base: '',
+    rates: {},
+    end_date: '',
+    start_date: '',
+    success: false,
+    timeseries: false
+  };
+  public currencyList: Array<{ key: string; value: string }> = []
+  public currencyFullName:string = "";
+
   constructor(
     private route: ActivatedRoute,
     public commonService: CommonService,
@@ -25,7 +44,6 @@ export class CurrencyExchangerDetailComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.chartData = CONSTANT.CHART_OBJ;
     this.route.params.subscribe(params => {
       this.amount = params['amount'];
       this.from = params['from'];
@@ -35,9 +53,9 @@ export class CurrencyExchangerDetailComponent implements OnInit {
     this.currentCurrencyFullName();
   }
 
-  public fetchChartData = () => {
+  public fetchChartData = () : void => {
     let obj = {
-      "start_date": (moment().add(1, 'M').startOf("month").format("YYYY-MM-DD")).toString(),
+      "start_date": (moment().subtract(1, 'year').add(1, 'M').startOf("month").format("YYYY-MM-DD")).toString(),
       "end_date" : (moment().format("YYYY-MM-DD")).toString(),
       "base" : this.from,
       "symbols" : this.to,
@@ -56,12 +74,12 @@ export class CurrencyExchangerDetailComponent implements OnInit {
           this.commonService.showFailNotification(CONSTANT.FAIL, e.error.message)
         }
       )
-    } catch(e: any) {
+    } catch(e) {
       this.commonService.showFailNotification(CONSTANT.FAIL, e)
     }
   }
   
-  public currentCurrencyFullName () {
+  public currentCurrencyFullName = () : void => {
     this.commonService.getCurrencyFromLocal((data: any) => {
       this.currencyList = [...data]
       let obj = this.currencyList.find((a:any) => a.key == this.from)
@@ -69,7 +87,7 @@ export class CurrencyExchangerDetailComponent implements OnInit {
     })
   }
 
-  public onGoToHomeClick = () => {
+  public onGoToHomeClick = () : void => {
     this.router.navigate([`/currency-exchanger/home`]);
   }
 }

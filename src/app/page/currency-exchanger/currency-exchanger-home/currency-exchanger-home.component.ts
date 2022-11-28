@@ -2,6 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { CONSTANT } from "../../../provider/constant";
 import { CommonService, CurrencyExchangerService } from "../../../services/index";
 
+interface FormValues {
+  from:string,
+  to:string,
+  amount:string,
+}
+
+interface LatestRequestObj {
+  base: string, 
+  symbols: string
+}
+
 @Component({
   selector: 'app-currency-exchanger-home',
   templateUrl: './currency-exchanger-home.component.html',
@@ -9,10 +20,10 @@ import { CommonService, CurrencyExchangerService } from "../../../services/index
 })
 export class CurrencyExchangerHomeComponent implements OnInit {
 
-  public amount: any = null;
-  public popularCurrency: any[] = [...CONSTANT.CURRENCY_SYMBOL_LIST]
+  public amount: number = 0;
+  public popularCurrency: string[] = [...CONSTANT.CURRENCY_SYMBOL_LIST]
   public popularCurrencyRates: any = {}
-  convertAmount: any = '';
+  convertAmount: string = '';
 
   constructor(
     public commonService: CommonService,
@@ -23,10 +34,10 @@ export class CurrencyExchangerHomeComponent implements OnInit {
   ngOnInit(): void { }
 
   /*
-  TODO: method to set amount from child
+  Method to set amount from child
   */
-  public onFormValueChange = async (event: any) => {
-    this.amount = event.amount;
+  public onFormValueChange = (event: FormValues) : void => {
+    this.amount = parseInt(event.amount);
     let obj = {
       "base": event.from,
       "symbols": CONSTANT.CURRENCY_SYMBOL_LIST.toString()
@@ -35,9 +46,9 @@ export class CurrencyExchangerHomeComponent implements OnInit {
   }
 
   /*
-  TODO: method to fetch latest symbols
+  Method to fetch latest symbols
   */
-  public fetchLatestSymbols = async (obj: any) => {
+  public fetchLatestSymbols = (obj: LatestRequestObj) :void => {
     try{
       this.currencyExchangerService.getLatestSymbols(obj).subscribe(
         (data: any) => {
@@ -51,7 +62,7 @@ export class CurrencyExchangerHomeComponent implements OnInit {
           this.commonService.showFailNotification(CONSTANT.FAIL, e.error.message)
         }
       )
-    } catch(e: any) {
+    } catch(e) {
       this.commonService.showFailNotification(CONSTANT.FAIL, e)
     }
   }

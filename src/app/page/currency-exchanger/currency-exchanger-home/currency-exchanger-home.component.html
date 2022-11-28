@@ -8,7 +8,7 @@
         <exchanger-card [moreButtonShow]="false" (onFormValueChange)="onFormValueChange($event)" [cAmount]="convertAmount"></exchanger-card>
         <div class="grid-container" *ngIf="popularCurrency && popularCurrency.length > 0">
           <ng-container *ngFor="let currency of popularCurrency; let i = index">
-            <div class="grid-item" [id]="currency"><h4>{{ currency }} </h4><h6> {{ amount ? popularCurrencyRates[currency] * amount : "-"}}</h6></div>
+            <div class="grid-item" [id]="currency"><h4>{{ currency }} </h4><h6> {{ (amount &&  popularCurrencyRates && popularCurrencyRates[currency]) ? popularCurrencyRates[currency] * amount : "-"}}</h6></div>
           </ng-container>
         </div>
       </div>

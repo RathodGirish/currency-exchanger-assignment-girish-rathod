@@ -6,6 +6,7 @@ import { CurrencyExchangerDetailComponent } from './currency-exchanger-detail/cu
 /* declare route here */
 const routes: Routes = [
   { path: "home", component: CurrencyExchangerHomeComponent },
+  { path: "detail/:from/:to", component: CurrencyExchangerDetailComponent },
   { path: "detail/:from/:to/:amount", component: CurrencyExchangerDetailComponent },
   { path: '', redirectTo: 'home' }
 ];

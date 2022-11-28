@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Connector } from '../provider/http-common';
+import { HttpInterceptor } from '../provider/http-interceptor';
 import { environment as ENV } from "../../environments/environment"
 
 @Injectable({
@@ -7,40 +7,40 @@ import { environment as ENV } from "../../environments/environment"
 })
 export class CurrencyExchangerService {
 
-  constructor(public connector: Connector) { }
+  constructor(public httpInterceptor: HttpInterceptor) { }
 
-   /* 
-  TODO: get all symbols
+  /* 
+  API to get all symbols
   */
   getAllSymbols = () => {
-    const URL = `${ENV.BASE_URL + ENV.GET_ALL_SYMBOLS}?access_key=${ENV.API_KEY}`;
-    return this.connector.Get(URL)
+    const URL = `${ENV.BASE_URL}symbols?access_key=${ENV.API_KEY}`;
+    return this.httpInterceptor.Get(URL)
   }
 
   /* 
-  TODO: get latest symbols
+  API to get latest symbols
   */
   getLatestSymbols = (data:any) => {
-    const URL = `${ENV.BASE_URL + ENV.GET_LATEST_SYMBOLS}?base=${data.base}&symbols=${data.symbols.toString()}`;
+    const URL = `${ENV.BASE_URL}latest?base=${data.base}&symbols=${data.symbols.toString()}`;
 
-    return this.connector.Get(URL)
+    return this.httpInterceptor.Get(URL)
   }
 
   /* 
-  TODO: convert currency
+  API to convert currency
   */
   convertCurrency = (data:any) => {
-    const URL = `${ENV.BASE_URL + ENV.CONVERT_CURRENCY}?from=${data.from}&to=${data.to}&amount=${data.amount}`;
+    const URL = `${ENV.BASE_URL}convert?from=${data.from}&to=${data.to}&amount=${data.amount}`;
     
-    return this.connector.Get(URL)
+    return this.httpInterceptor.Get(URL)
   }
 
- /* 
-  TODO: get chart data
+  /* 
+  API to get chart data
   */
   getChartData = (data:any) => {
-    const URL = `${ENV.BASE_URL + ENV.GET_TIME_SERIES_DATA}?base=${data.base}&symbols=${data.symbols}&start_date=${data.start_date}&end_date=${data.end_date}`;
+    const URL = `${ENV.BASE_URL}timeseries?base=${data.base}&symbols=${data.symbols}&start_date=${data.start_date}&end_date=${data.end_date}`;
 
-    return this.connector.Get(URL)
+    return this.httpInterceptor.Get(URL)
   }
 }

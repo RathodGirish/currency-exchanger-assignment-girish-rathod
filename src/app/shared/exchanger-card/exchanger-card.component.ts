@@ -12,8 +12,9 @@ import { CONSTANT } from 'src/app/provider/constant';
 export class ExchangerCardComponent implements OnInit {
 
   @Output() onFormValueChange = new EventEmitter();
-  @Input() moreButtonShow: any;
+  @Input() moreButtonShow: boolean = false;
   @Input() cAmount: string = '';
+
   public currencyList: any[] = []
   public submitted: boolean = false;
   public enableMoreButton: boolean = false;
@@ -46,10 +47,11 @@ export class ExchangerCardComponent implements OnInit {
   }
 
   /*
-  TODO: method to set currency data into local
+  Method to set currency data into local
   */
-  public setCurrencyDataIntoLocal = async () => {
+  public setCurrencyDataIntoLocal = () : void => {
     try{
+
       this.currencyExchangerService.getAllSymbols().subscribe(
         (data: any) => {
           if (data && data.success === true) {
@@ -63,17 +65,17 @@ export class ExchangerCardComponent implements OnInit {
           this.commonService.showFailNotification(CONSTANT.FAIL, e.error.message)
         }
       );
-    } catch(e: any) {
+    } catch(e) {
       this.commonService.showFailNotification(CONSTANT.FAIL, e)
     }
   }
 
   /*
-  TODO: method to create form for currency
+  Method to create form for currency
   */
-  createForm() {
+  public createForm() : void {
     this.currencyExchangerForm = this.fb.group({
-      amount: ['', Validators.required],
+      amount: ['1', Validators.required],
       from: [{value: 'EUR', disabled: (this.moreButtonShow)? true : false}, Validators.required],
       to: ['USD', Validators.required]
     });
@@ -81,75 +83,86 @@ export class ExchangerCardComponent implements OnInit {
   get frm() { return this.currencyExchangerForm.controls; }
 
   /*
-  TODO: method to swipe currency
+  Method to swipe currency
   */
-  public onSwipeButtonClick = () => {
-    const currencyExchangerFormmData = this.currencyExchangerForm.value;
+  public onSwipeButtonClick = () : void=> {
+    const currencyExchangerFormData = this.currencyExchangerForm.value;
     this.currencyExchangerForm.patchValue({
-      from: currencyExchangerFormmData.to,
-      to: currencyExchangerFormmData.from,
+      from: currencyExchangerFormData.to,
+      to: currencyExchangerFormData.from,
     })
   }
 
   /*
-  TODO: call when user click on more details button
+  Method to call when user click on more details button
   */
-  public onMoreDetailButtonClick = () => {
-    const formmData = this.currencyExchangerForm.value;
+  public onMoreDetailButtonClick = () : void => {
+    const formData = this.currencyExchangerForm.value;
     if (!this.currencyExchangerForm.invalid) {
-      this.router.navigate([`/currency-exchanger/detail/${formmData.from}/${formmData.to}/${formmData.amount}`]);
+      this.router.navigate([`/currency-exchanger/detail/${formData.from}/${formData.to}/${formData.amount}`]);
     } else {
       this.commonService.showFailNotification(CONSTANT.FAIL,CONSTANT.INVALID_FORM);
     }
   }
 
   /*
-  TODO: method to return converted value with format
+  Method to return converted value with format
   */
-  public getConvertedValue = (rate: string) => {
+  public getConvertedValue = (rate: string) : string => {
     if (this.convertAmount) {
-      const formmData = this.currencyExchangerForm.value;
-      let value = `1 ${formmData.from} = ${rate} ${formmData.to}`
+      const formData = this.currencyExchangerForm.value;
+      let value = `1 ${formData.from} = ${rate} ${formData.to}`
       return value.toString()
     }
     return ''
   }
 
-   /*
-  TODO: call when user click on converter button
+  /*
+  Method to call when user click on converter button
   */
-  public onConvertButtonClick = () => {
-    const formmData = this.currencyExchangerForm.value;
-    if(formmData.from === formmData.to){
-      this.commonService.showFailNotification(CONSTANT.FAIL, CONSTANT.SELECT_DIFFERENT_FROM_TO)
-      this.enableMoreButton = false;
-    } else {
-      this.convertRate = '';
-      this.convertAmount = '';
-      try{
-      
-        this.currencyExchangerService.convertCurrency(formmData).subscribe(
-          (data: any) => {
-            if (data && data.success === true) {
-              this.onFormValueChange.emit(formmData);
-              this.enableMoreButton = true;
-              let obj = {
-                "base":formmData.to,
-                "symbols":CONSTANT.CURRENCY_SYMBOL_LIST.toString()
+  public onConvertButtonClick = () : void => {
+    const formData = this.currencyExchangerForm.value;
+    if(formData.amount == "" || formData.from == "" || formData.to == ""){
+      this.commonService.showFailNotification(CONSTANT.FAIL, CONSTANT.INVALID_FORM)
+    } else { 
+      if(formData.from === formData.to){
+        this.commonService.showFailNotification(CONSTANT.FAIL, CONSTANT.SELECT_DIFFERENT_FROM_TO)
+        this.enableMoreButton = false;
+      } else {
+        this.convertRate = '';
+        this.convertAmount = '';
+        try{
+         
+          this.currencyExchangerService.convertCurrency(formData).subscribe(
+            (data: any) => {
+              if (data && data.success === true) {
+                this.onFormValueChange.emit(formData);
+                this.enableMoreButton = true;
+                let obj = {
+                  "base":formData.to,
+                  "symbols":CONSTANT.CURRENCY_SYMBOL_LIST.toString()
+                }
+                this.convertAmount = data.result.toString() + ' ' + formData.to;
+                this.convertRate = this.getConvertedValue(data.info.rate.toString());
+              } else {
+                this.commonService.showFailNotification(CONSTANT.FAIL, CONSTANT.SOMETHING_WENT_WRONG)
               }
-              this.convertAmount = data.result.toString();
-              this.convertRate = this.getConvertedValue(data.info.rate.toString());
-            } else {
-              this.commonService.showFailNotification(CONSTANT.FAIL, CONSTANT.SOMETHING_WENT_WRONG)
+            },
+            (e: any) => {
+              this.commonService.showFailNotification(CONSTANT.FAIL, e.error.message)
             }
-          },
-          (e: any) => {
-            this.commonService.showFailNotification(CONSTANT.FAIL, e.error.message)
-          }
-        )
-      } catch(e: any) {
-        this.commonService.showFailNotification(CONSTANT.FAIL, e)
+          )
+        } catch(e) {
+          this.commonService.showFailNotification(CONSTANT.FAIL, e)
+        }
       }
     }
+  }
+
+  /*
+  Method to check calculation value change or not
+  */
+  public onCalculateValueChange() : void{
+    this.enableMoreButton = false;
   }
 }

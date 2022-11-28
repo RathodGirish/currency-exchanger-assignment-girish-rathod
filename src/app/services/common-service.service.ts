@@ -28,8 +28,7 @@ export class CommonService {
   */
   public getCurrencyFromLocal(callback: any) {
     let val: any = localStorage.getItem(CONSTANT.CURRENCY_LIST);
-    let data = JSON.parse(val);
-    callback(data);
+    callback((val)? JSON.parse(val) : []);
   };
 
   /*

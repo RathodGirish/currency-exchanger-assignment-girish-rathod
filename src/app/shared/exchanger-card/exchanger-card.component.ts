@@ -18,6 +18,7 @@ export class ExchangerCardComponent implements OnInit {
   public submitted: boolean = false;
   public enableMoreButton: boolean = false;
   public convertAmount: string = "";
+  public convertRate: string = "";
   public isDetailScreen: boolean = false;
   currencyExchangerForm: FormGroup = new FormGroup({});
 
@@ -36,7 +37,7 @@ export class ExchangerCardComponent implements OnInit {
       if(data && data.length > 0) {
         this.currencyList = [...data]
       } else {
-        // this.setCurrencyDataIntoLocal()
+        this.setCurrencyDataIntoLocal()
       }
     })
     if(this.cAmount) {
@@ -48,15 +49,23 @@ export class ExchangerCardComponent implements OnInit {
   TODO: method to set currency data into local
   */
   public setCurrencyDataIntoLocal = async () => {
-    this.currencyExchangerService.getAllSymbols().subscribe(
-      (async (data: any) => {
-        if (data && data.success === true) {
-          let obj = data.symbols
-          let currencyArray = this.commonService.objectToArray(obj)
-          this.commonService.setCurrencyIntoLocal(currencyArray)
+    try{
+      this.currencyExchangerService.getAllSymbols().subscribe(
+        (data: any) => {
+          if (data && data.success === true) {
+            let obj = data.symbols
+            let currencyArray = this.commonService.objectToArray(obj)
+            this.currencyList = [...currencyArray]
+            this.commonService.setCurrencyIntoLocal(currencyArray)
+          }
+        },
+        (e: any) => {
+          this.commonService.showFailNotification(CONSTANT.FAIL, e.error.message)
         }
-      })
-    );
+      );
+    } catch(e: any) {
+      this.commonService.showFailNotification(CONSTANT.FAIL, e)
+    }
   }
 
   /*
@@ -97,10 +106,10 @@ export class ExchangerCardComponent implements OnInit {
   /*
   TODO: method to return converted value with format
   */
-  public getConvertedValue = () => {
+  public getConvertedValue = (rate: string) => {
     if (this.convertAmount) {
       const formmData = this.currencyExchangerForm.value;
-      let value = `${formmData.amount}.00 ${formmData.from}=${this.convertAmount} ${formmData.to}`
+      let value = `1 ${formmData.from} = ${rate} ${formmData.to}`
       return value.toString()
     }
     return ''
@@ -115,29 +124,32 @@ export class ExchangerCardComponent implements OnInit {
       this.commonService.showFailNotification(CONSTANT.FAIL, CONSTANT.SELECT_DIFFERENT_FROM_TO)
       this.enableMoreButton = false;
     } else {
-      this.currencyExchangerService.convertCurrency(formmData).subscribe(
-        (async (data: any) => {
-          if (data && data.success === true) {
-            this.onFormValueChange.emit(formmData);
-            this.enableMoreButton = true;
-            let obj = {
-              "base":formmData.to,
-              "symbols":CONSTANT.CURRENCY_SYMBOL_LIST.toString()
+      this.convertRate = '';
+      this.convertAmount = '';
+      try{
+      
+        this.currencyExchangerService.convertCurrency(formmData).subscribe(
+          (data: any) => {
+            if (data && data.success === true) {
+              this.onFormValueChange.emit(formmData);
+              this.enableMoreButton = true;
+              let obj = {
+                "base":formmData.to,
+                "symbols":CONSTANT.CURRENCY_SYMBOL_LIST.toString()
+              }
+              this.convertAmount = data.result.toString();
+              this.convertRate = this.getConvertedValue(data.info.rate.toString());
+            } else {
+              this.commonService.showFailNotification(CONSTANT.FAIL, CONSTANT.SOMETHING_WENT_WRONG)
             }
-            this.currencyExchangerService.getLatestSymbols(obj).subscribe(
-              (async (data: any) => {
-                if (data && data.success === true) {
-                  this.convertAmount = data.result;
-                 } else {
-                  this.commonService.showFailNotification(CONSTANT.FAIL, CONSTANT.SOMETHING_WENT_WRONG)
-                }
-               })
-             )
-          } else {
-            this.commonService.showFailNotification(CONSTANT.FAIL, CONSTANT.SOMETHING_WENT_WRONG)
+          },
+          (e: any) => {
+            this.commonService.showFailNotification(CONSTANT.FAIL, e.error.message)
           }
-        })
-      )
+        )
+      } catch(e: any) {
+        this.commonService.showFailNotification(CONSTANT.FAIL, e)
+      }
     }
   }
 }

@@ -28,8 +28,8 @@ export class CurrencyExchangerHomeComponent implements OnInit {
   public onFormValueChange = async (event: any) => {
     this.amount = event.amount;
     let obj = {
-      "base":event.from,
-      "symbols":CONSTANT.CURRENCY_SYMBOL_LIST.toString()
+      "base": event.from,
+      "symbols": CONSTANT.CURRENCY_SYMBOL_LIST.toString()
     }
     this.fetchLatestSymbols(obj)
   }
@@ -38,15 +38,21 @@ export class CurrencyExchangerHomeComponent implements OnInit {
   TODO: method to fetch latest symbols
   */
   public fetchLatestSymbols = async (obj: any) => {
-    this.currencyExchangerService.getLatestSymbols(obj).subscribe(
-      (async (data: any) => {
-        if (data && data.success === true) {
-          this.convertAmount = data.result;
-          this.popularCurrencyRates = {...data.rates}
-        } else {
-          this.commonService.showFailNotification(CONSTANT.FAIL, CONSTANT.SOMETHING_WENT_WRONG)
+    try{
+      this.currencyExchangerService.getLatestSymbols(obj).subscribe(
+        (data: any) => {
+          if (data && data.success === true) {
+            this.popularCurrencyRates = {...data.rates}
+          } else {
+            this.commonService.showFailNotification(CONSTANT.FAIL, CONSTANT.SOMETHING_WENT_WRONG)
+          }
+        },
+        (e: any) => {
+          this.commonService.showFailNotification(CONSTANT.FAIL, e.error.message)
         }
-      })
-    )
+      )
+    } catch(e: any) {
+      this.commonService.showFailNotification(CONSTANT.FAIL, e)
+    }
   }
 }

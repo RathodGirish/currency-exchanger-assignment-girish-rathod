@@ -163,6 +163,14 @@
   width: 94%;
 }
 
+.swipe-icon img{
+  width: 65px;
+  height: 60px;
+  margin-left: -20px;
+  margin-top: 10px;
+
+}
+
 .btn-trans{
   padding: 5px;
   background: transparent;
@@ -198,4 +206,8 @@
 
 .card-height{
   height: 70px !important;
+}
+
+.text-center{
+  text-align: center;
 }

@@ -16,7 +16,7 @@ export class CurrencyExchangerDetailComponent implements OnInit {
  public to: string ='';
  public chartData: any;
  public currencyList: any[] = []
- public currencyName:any = "";
+ public currencyFullName:any = "";
   constructor(
     private route: ActivatedRoute,
     public commonService: CommonService,
@@ -32,33 +32,40 @@ export class CurrencyExchangerDetailComponent implements OnInit {
       this.to = params['to'];
 		});
     this.fetchChartData()
-    this.currentCurrencyName();
+    this.currentCurrencyFullName();
   }
 
   public fetchChartData = () => {
     let obj = {
       "start_date": (moment().add(1, 'M').startOf("month").format("YYYY-MM-DD")).toString(),
-      "end_date" : (moment().subtract(1, 'M').endOf("month").format("YYYY-MM-DD")).toString(),
+      "end_date" : (moment().format("YYYY-MM-DD")).toString(),
       "base" : this.from,
       "symbols" : this.to,
     }
 
-    this.currencyExchangerService.getChartData(obj).subscribe(
-      (data: any) => {
-        if (data && data.success === true) {
-          this.chartData = {...data}
-        } else {
-          this.commonService.showFailNotification(CONSTANT.FAIL, CONSTANT.SOMETHING_WENT_WRONG)
+    try{
+      this.currencyExchangerService.getChartData(obj).subscribe(
+        (data: any) => {
+          if (data && data.success === true) {
+            this.chartData = {...data}
+          } else {
+            this.commonService.showFailNotification(CONSTANT.FAIL, CONSTANT.SOMETHING_WENT_WRONG)
+          }
+        },
+        (e: any) => {
+          this.commonService.showFailNotification(CONSTANT.FAIL, e.error.message)
         }
-      }
-    )
+      )
+    } catch(e: any) {
+      this.commonService.showFailNotification(CONSTANT.FAIL, e)
+    }
   }
   
-  public currentCurrencyName () {
+  public currentCurrencyFullName () {
     this.commonService.getCurrencyFromLocal((data: any) => {
       this.currencyList = [...data]
       let obj = this.currencyList.find((a:any) => a.key == this.from)
-      if(obj) this.currencyName = obj['value'];
+      if(obj) this.currencyFullName = obj['value'];
     })
   }
 

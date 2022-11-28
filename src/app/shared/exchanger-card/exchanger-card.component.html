@@ -40,9 +40,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="column-2" style="text-align:center">
-                                    <img src="assets/images/transfer-icon.png" width="80" heigth="50"
-                                        (click)="onSwipeButtonClick()">
+                                <div class="column-2 text-center cursor-pointer swipe-icon">
+                                    <img src="assets/images/transfer-icon.png" (click)="onSwipeButtonClick()">
                                 </div>
                                 <div class="column-5">
                                     <div class="form-group">
@@ -76,10 +75,10 @@
                     </div>
                     <div class="row m-y-2 content-center">
                         <div class="column-4">
-                            <input type="text" class="box-panel text-center" placeholder="1.00 EUR=XX.XX USD" [value]='getConvertedValue()' />
+                            <input type="text" class="box-panel text-center" placeholder="1.00 EUR=XX.XX USD" [value]='convertRate' disabled />
                         </div>
                         <div [ngClass]="!moreButtonShow ? 'column-4' : 'column-8'">
-                            <input type="text" class="box-panel text-center card-height" [ngClass]="moreButtonShow ? 'w-96' : ''" placeholder="XX.XX USD" />
+                            <input type="text" class="box-panel text-center card-height" [ngClass]="moreButtonShow ? 'w-96' : ''" placeholder="XX.XX USD" disabled [value]='convertAmount' />
                         </div>
                         <div class="column-4" *ngIf="!moreButtonShow">
                             <button class="button-blue w-94 m-y-10 cursor-pointer" [disabled]="currencyExchangerForm.invalid || !enableMoreButton" (click)="onMoreDetailButtonClick()">

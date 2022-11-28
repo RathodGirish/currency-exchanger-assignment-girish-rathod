@@ -17,3 +17,6 @@
 Run `ng test` to execute the unit tests.
 
 
+![Screenshot](Home-screen-before-convert.PNG)
+![Screenshot](Home-screen.PNG)
+![Screenshot](Details-screen.PNG)

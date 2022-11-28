@@ -6,13 +6,13 @@
       </div>
       <div class="header my-2 column-4 text-right">
         <div class="row p-x-3 justi-end">
-          <button type="button" class="button-blue w-70 m-y-10 cursor-pointer" (click)="onGoToHomeClick()">Back to Home</button>
+          <button type="button" class="button-blue w-70 m-y-10 cursor-pointer pull-right" (click)="onGoToHomeClick()">Back to Home</button>
         </div>
       </div>
     </div>
     <div class="row">
       <div class="column-12">
-        <exchanger-card [fromValue]="from" [toValue]="to" [amountValue]="amount" [moreButtonShow]="true"></exchanger-card>
+        <exchanger-card [from]="from" [to]="to" [amount]="amount" [moreButtonShow]="true"></exchanger-card>
       </div>
     </div>
     <div class="row">

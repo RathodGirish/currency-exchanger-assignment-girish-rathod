@@ -16,6 +16,17 @@ export class CommonService {
       return { key: a, value: obj[a] };
     });
   };
+  
+  /* 
+  Method to check object value undefined or null
+  */
+  public static isUndefined(obj: any) {
+    if (typeof obj == 'undefined' || obj == null || obj == '') {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   /* 
   Method to  set currency array into local storage

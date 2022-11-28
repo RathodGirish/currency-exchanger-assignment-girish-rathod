@@ -25,8 +25,8 @@
                                             From
                                             <span class="invalid-text cursor-pointer">&nbsp;*</span></label>
                                         <select class="box-panel cursor-pointer text-right" formControlName="from" (change)="onCalculateValueChange()"
-                                            placeholder="Select Currency" required [disabled]="isDetailScreen"
-                                            [ngClass]="{ 'is-invalid': submitted && frm.from.errors }">
+                                            placeholder="Select Currency" required
+                                            [ngClass]="{ 'is-invalid': submitted && frm.from.errors }" [attr.disabled]="isDetailScreen ? '' : null">
                                             <option disabled value="">Select Currency</option>
                                             <option *ngFor="let code of currencyList" [value]="code.key">
                                                 {{ code.key }}
@@ -48,7 +48,7 @@
                                         <label for="to">
                                             To <span class="invalid-text">&nbsp;*</span></label>
                                         <select class="box-panel cursor-pointer text-right" formControlName="to" (change)="onCalculateValueChange()"
-                                            placeholder="Select Currency" required [disabled]="isDetailScreen"
+                                            placeholder="Select Currency" required
                                             [ngClass]="{ 'is-invalid': submitted && frm.to.errors }">
                                             <option disabled value="">Select Currency</option>
                                             <option *ngFor="let code of currencyList" [value]="code.key">

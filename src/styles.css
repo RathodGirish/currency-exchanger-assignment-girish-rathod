@@ -68,6 +68,14 @@
   flex: 0 0 auto;
 }
 
+.pull-right{
+  float: right;
+}
+
+.justi-end{
+  justify-content: end;
+}
+
 .card {
   display: flex;
   flex-direction: column;

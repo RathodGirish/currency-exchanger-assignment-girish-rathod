@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { CommonService, CurrencyExchangerService } from '../../services/index'
@@ -14,9 +14,9 @@ export class ExchangerCardComponent implements OnInit {
   @Output() onFormValueChange = new EventEmitter();
   @Input() moreButtonShow: boolean = false;
   @Input() cAmount: string = '';
-  @Input() fromValue: string = '';
-  @Input() toValue: string = '';
-  @Input() amountValue: number = 0;
+  @Input() from: string = '';
+  @Input() to: string = '';
+  @Input() amount: number = 0;
 
   public currencyList: any[] = []
   public submitted: boolean = false;
@@ -27,25 +27,42 @@ export class ExchangerCardComponent implements OnInit {
   public currencyExchangerForm: FormGroup = new FormGroup({});
 
   constructor(
+    private cd: ChangeDetectorRef,
     private fb: FormBuilder,
     public commonService: CommonService,
     protected currencyExchangerService: CurrencyExchangerService,
     private router: Router
-  ) {
-    this.createForm();
-  }
-
+    ) {
+      this.commonService.getCurrencyFromLocal((data: any) => {
+        if(data && data.length > 0) {
+          this.currencyList = [...data]
+        } else {
+          this.setCurrencyDataIntoLocal()
+        }
+      })
+      
+    }
+    
   ngOnInit(): void {
+    this.createForm();
+
     this.isDetailScreen = this.moreButtonShow
-    this.commonService.getCurrencyFromLocal((data: any) => {
-      if(data && data.length > 0) {
-        this.currencyList = [...data]
-      } else {
-        this.setCurrencyDataIntoLocal()
-      }
-    })
     if(this.cAmount) {
       this.convertAmount = this.cAmount
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    // changes.prop contains the old and the new value...
+
+    for (let propName in changes) {
+      let chng = changes[propName];
+      let cur  = chng.currentValue;
+      let prev = chng.previousValue;
+      if(cur && prev && cur !== prev){
+        this.currencyExchangerForm.setValue({ amount: '1', from: 'EUR', to: cur });
+        this.cd.detectChanges();
+      }
     }
   }
 
@@ -78,9 +95,9 @@ export class ExchangerCardComponent implements OnInit {
   */
   public createForm() : void {
     this.currencyExchangerForm = this.fb.group({
-      amount: [this.amountValue || '1', Validators.required],
-      from: [{value: this.fromValue || 'EUR', disabled: (this.moreButtonShow)? true : false}, Validators.required],
-      to: [this.toValue || 'USD', Validators.required]
+      amount: [this.amount || '1', Validators.required],
+      from: [this.from || 'EUR', Validators.required],
+      to: [this.to || 'USD', Validators.required]
     });
   }
   get frm() { return this.currencyExchangerForm.controls; }
@@ -125,7 +142,7 @@ export class ExchangerCardComponent implements OnInit {
   */
   public onConvertButtonClick = () : void => {
     const formData = this.currencyExchangerForm.value;
-    if(formData.amount == "" || formData.from == "" || formData.to == ""){
+    if(this.currencyExchangerForm.invalid){
       this.commonService.showFailNotification(CONSTANT.FAIL, CONSTANT.INVALID_FORM)
     } else { 
       if(formData.from === formData.to){

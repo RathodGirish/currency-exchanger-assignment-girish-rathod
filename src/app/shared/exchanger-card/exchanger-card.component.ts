@@ -65,7 +65,7 @@ export class ExchangerCardComponent implements OnInit {
   createForm() {
     this.currencyExchangerForm = this.fb.group({
       amount: ['', Validators.required],
-      from: ['EUR', Validators.required],
+      from: [{value: 'EUR', disabled: (this.moreButtonShow)? true : false}, Validators.required],
       to: ['USD', Validators.required]
     });
   }

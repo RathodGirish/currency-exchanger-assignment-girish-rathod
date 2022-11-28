@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, ViewChild, Input } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild, Input, SimpleChanges } from '@angular/core';
 import Chart from 'chart.js/auto';
 import { CommonService} from "../../services/index"
 import * as moment from "moment";
@@ -9,15 +9,33 @@ interface ChartObj {
   rates: string[]
 }
 
+interface ChartData {
+  base: string;
+  rates: any;
+  end_date: string;
+  start_date: string;
+  success: boolean;
+  timeseries: boolean;
+}
+
+
 @Component({
   selector: 'app-line-chart',
   templateUrl: './line-chart.component.html',
   styleUrls: ['./line-chart.component.css'],
 })
 export class LineChartComponent implements AfterViewInit {
-  @Input() chartData:any;
+  @Input() chartData: ChartData = {
+    base: "",
+    end_date: "",
+    rates: {},
+    start_date: "",
+    success: false,
+    timeseries: false
+  };
+  @Input() to: string = "";
   @ViewChild('lineCanvas') lineCanvas: ElementRef | undefined;
-  lineChart: any;
+  public lineChart: any;
   public isChartShown:Boolean = false
 
   constructor(
@@ -26,7 +44,7 @@ export class LineChartComponent implements AfterViewInit {
 
   ngOnInit(): void {
     if(!this.commonService.isObjEmpty(this.chartData['rates'])){
-      this.lineChartMethod();
+      // this.lineChartMethod();
       this.isChartShown = true;
     } 
   }
@@ -37,12 +55,27 @@ export class LineChartComponent implements AfterViewInit {
     }
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    for (let propName in changes) {
+      let chng = changes[propName];
+      let cur  = chng.currentValue;
+      let prev = chng.previousValue;
+      if(cur && prev && cur !== prev){
+        this.isChartShown = false;
+        this.lineChartMethod();
+      }
+    }
+  }
+
   /*
   * Method to load line chart data. 
   */
   lineChartMethod() : void {
     let months = this.getMonthYearList(this.chartData['start_date'], this.chartData['end_date'])
     let rateData = this.getRateDataList(months)
+    if(this.lineChart){
+      this.lineChart.destroy();
+    }
     this.lineChart = new Chart(this.lineCanvas?.nativeElement, {
       type: 'line',
       data: {
@@ -73,6 +106,7 @@ export class LineChartComponent implements AfterViewInit {
         ],
       },
     });
+    this.isChartShown = true;
   }
 
   /*
@@ -101,7 +135,7 @@ export class LineChartComponent implements AfterViewInit {
 		    const dateStart = moment(prop);
         let str = dateStart.format('MMM-YYYY');
         if(str == month){
-          list[index]['rates'].push(this.chartData['rates'][prop]['EUR'])
+          list[index]['rates'].push(this.chartData['rates'][prop][this.to])
         }
       }
       let rateIndex = list[index]['rates'].length - 1;

@@ -52,7 +52,7 @@ export class ExchangerCardComponent implements OnInit {
     }
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges) : void {
     // changes.prop contains the old and the new value...
 
     for (let propName in changes) {

@@ -12,12 +12,12 @@
     </div>
     <div class="row">
       <div class="column-12">
-        <exchanger-card [from]="from" [to]="to" [amount]="amount" [moreButtonShow]="true"></exchanger-card>
+        <exchanger-card [from]="from" [to]="to" [amount]="amount" (onFormValueChange)="onFormValueChange($event)" [moreButtonShow]="true"></exchanger-card>
       </div>
     </div>
     <div class="row">
       <div class="column-12">
-        <app-line-chart [chartData]="chartData"></app-line-chart>
+        <app-line-chart [chartData]="chartData" [to]="to"></app-line-chart>
       </div>
     </div>
   </div>

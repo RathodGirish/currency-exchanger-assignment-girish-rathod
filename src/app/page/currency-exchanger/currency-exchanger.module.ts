@@ -7,12 +7,14 @@ import { CommonService, CurrencyExchangerService } from '../../services/index';
 import { Connector } from '../../provider/http-common';
 import { CurrencyExchangerRoutingModule } from './currency-exchanger-routing.module';
 import { ExchangerCardComponent } from '../../shared/exchanger-card/exchanger-card.component';
+import { LineChartComponent } from '../../shared/line-chart/line-chart.component';
 
 @NgModule({
   declarations: [    
     CurrencyExchangerHomeComponent,
     CurrencyExchangerDetailComponent,
-    ExchangerCardComponent
+    ExchangerCardComponent,
+    LineChartComponent
   ],
   imports: [
     CommonModule,

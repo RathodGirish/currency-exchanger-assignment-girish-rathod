@@ -9,20 +9,10 @@ import { CommonService, CurrencyExchangerService } from "../../../services/index
 })
 export class CurrencyExchangerHomeComponent implements OnInit {
 
-  public amount: number = 1;
+  public amount: any = null;
   public popularCurrency: any[] = [...CONSTANT.CURRENCY_SYMBOL_LIST]
-  public popularCurrencyRates: any = {
-    "AED": 3.673042,
-    "AUD": 1.48125,
-    "BTC": 6.0131601e-05,
-    "CAD": 1.34015,
-    "EGP": 24.534063,
-    "EUR": 0.960204,
-    "GBP": 0.827061,
-    "INR": 81.66995,
-    "JPY": 139.12504,
-    "SGD": 1.375704
-  }
+  public popularCurrencyRates: any = {}
+  convertAmount: any = '';
 
   constructor(
     public commonService: CommonService,
@@ -30,30 +20,33 @@ export class CurrencyExchangerHomeComponent implements OnInit {
   ) {
   }
 
-  ngOnInit(): void {
-    // this.setCurrencyDataIntoLocal()
-  }
-
-  /*
-  TODO: method to set currency data into local
-  */
-  public setCurrencyDataIntoLocal = async () => {
-    this.currencyExchangerService.getAllSymbols().subscribe(
-      (async (data: any) => {
-        if (data && data.success === true) {
-          let obj = data.symbols
-          let currencyArray = this.commonService.objectToArray(obj)
-          this.commonService.setCurrencyIntoLocal(currencyArray)
-        }
-      })
-    );
-  }
+  ngOnInit(): void { }
 
   /*
   TODO: method to set amount from child
   */
-  public onAmountChange = async (event: any) => {
-    this.amount = event;
+  public onFormValueChange = async (event: any) => {
+    this.amount = event.amount;
+    let obj = {
+      "base":event.from,
+      "symbols":CONSTANT.CURRENCY_SYMBOL_LIST.toString()
+    }
+    this.fetchLatestSymbols(obj)
   }
 
+  /*
+  TODO: method to fetch latest symbols
+  */
+  public fetchLatestSymbols = async (obj: any) => {
+    this.currencyExchangerService.getLatestSymbols(obj).subscribe(
+      (async (data: any) => {
+        if (data && data.success === true) {
+          this.convertAmount = data.result;
+          this.popularCurrencyRates = {...data.rates}
+        } else {
+          this.commonService.showFailNotification(CONSTANT.FAIL, CONSTANT.SOMETHING_WENT_WRONG)
+        }
+      })
+    )
+  }
 }

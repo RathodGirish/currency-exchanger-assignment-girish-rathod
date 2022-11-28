@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import {CommonService, CurrencyExchangerService } from '../../services/index'
+import { CommonService, CurrencyExchangerService } from '../../services/index'
 import { CONSTANT } from 'src/app/provider/constant';
 
 @Component({
@@ -11,8 +11,9 @@ import { CONSTANT } from 'src/app/provider/constant';
 })
 export class ExchangerCardComponent implements OnInit {
 
-  @Output() amountChange = new EventEmitter();
+  @Output() onFormValueChange = new EventEmitter();
   @Input() moreButtonShow: any;
+  @Input() cAmount: string = '';
   public currencyList: any[] = []
   public submitted: boolean = false;
   public enableMoreButton: boolean = false;
@@ -32,10 +33,35 @@ export class ExchangerCardComponent implements OnInit {
   ngOnInit(): void {
     this.isDetailScreen = this.moreButtonShow
     this.commonService.getCurrencyFromLocal((data: any) => {
-      this.currencyList = [...data]
+      if(data && data.length > 0) {
+        this.currencyList = [...data]
+      } else {
+        // this.setCurrencyDataIntoLocal()
+      }
     })
+    if(this.cAmount) {
+      this.convertAmount = this.cAmount
+    }
   }
 
+  /*
+  TODO: method to set currency data into local
+  */
+  public setCurrencyDataIntoLocal = async () => {
+    this.currencyExchangerService.getAllSymbols().subscribe(
+      (async (data: any) => {
+        if (data && data.success === true) {
+          let obj = data.symbols
+          let currencyArray = this.commonService.objectToArray(obj)
+          this.commonService.setCurrencyIntoLocal(currencyArray)
+        }
+      })
+    );
+  }
+
+  /*
+  TODO: method to create form for currency
+  */
   createForm() {
     this.currencyExchangerForm = this.fb.group({
       amount: ['', Validators.required],
@@ -45,14 +71,21 @@ export class ExchangerCardComponent implements OnInit {
   }
   get frm() { return this.currencyExchangerForm.controls; }
 
-  public onExchangerClick = () => {
+  /*
+  TODO: method to swipe currency
+  */
+  public onSwipeButtonClick = () => {
     const currencyExchangerFormmData = this.currencyExchangerForm.value;
     this.currencyExchangerForm.patchValue({
       from: currencyExchangerFormmData.to,
       to: currencyExchangerFormmData.from,
     })
   }
-  public onMoreDetails = () => {
+
+  /*
+  TODO: call when user click on more details button
+  */
+  public onMoreDetailButtonClick = () => {
     const formmData = this.currencyExchangerForm.value;
     if (!this.currencyExchangerForm.invalid) {
       this.router.navigate([`/currency-exchanger/detail/${formmData.from}/${formmData.to}/${formmData.amount}`]);
@@ -60,8 +93,12 @@ export class ExchangerCardComponent implements OnInit {
       this.commonService.showFailNotification(CONSTANT.FAIL,CONSTANT.INVALID_FORM);
     }
   }
-  public getValue = () => {
-    if(this.convertAmount) {
+
+  /*
+  TODO: method to return converted value with format
+  */
+  public getConvertedValue = () => {
+    if (this.convertAmount) {
       const formmData = this.currencyExchangerForm.value;
       let value = `${formmData.amount}.00 ${formmData.from}=${this.convertAmount} ${formmData.to}`
       return value.toString()
@@ -69,26 +106,16 @@ export class ExchangerCardComponent implements OnInit {
     return ''
   }
 
+   /*
+  TODO: call when user click on converter button
+  */
   public onConvertButtonClick = () => {
     const formmData = this.currencyExchangerForm.value;
     this.currencyExchangerService.convertCurrency(formmData).subscribe(
       (async (data: any) => {
         if (data && data.success === true) {
+          this.onFormValueChange.emit(formmData);
           this.enableMoreButton = true;
-          this.amountChange.emit(formmData.amount);
-          let obj = {
-            "base":formmData.to,
-            "symbols":CONSTANT.CURRENCY_SYMBOL_LIST.toString()
-          }
-          this.currencyExchangerService.getLatestSymbols(obj).subscribe(
-            (async (data: any) => {
-              if (data && data.success === true) {
-                this.convertAmount = data.result;
-               } else {
-                this.commonService.showFailNotification(CONSTANT.FAIL, CONSTANT.SOMETHING_WENT_WRONG)
-              }
-             })
-           )
         } else {
           this.commonService.showFailNotification(CONSTANT.FAIL, CONSTANT.SOMETHING_WENT_WRONG)
         }

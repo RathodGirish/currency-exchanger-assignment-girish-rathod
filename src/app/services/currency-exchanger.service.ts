@@ -36,9 +36,9 @@ export class CurrencyExchangerService {
   }
 
  /* 
-  TODO: get time series data 
+  TODO: get chart data
   */
-  getTimeSeriesData = (data:any) => {
+  getChartData = (data:any) => {
     const URL = `${ENV.BASE_URL + ENV.GET_TIME_SERIES_DATA}?base=${data.base}&symbols=${data.symbols}&start_date=${data.start_date}&end_date=${data.end_date}`;
 
     return this.connector.Get(URL)

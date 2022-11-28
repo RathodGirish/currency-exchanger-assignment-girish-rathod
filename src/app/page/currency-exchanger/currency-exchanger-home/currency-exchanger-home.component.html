@@ -2,10 +2,12 @@
   <div class="container-fluid">
     <div class="row">
       <div class="column-12">
-        <div class="header my-2">
-          <label class="ngValid-label"><h2>Currency Exchanger</h2></label>
+        <div class="header-div-top10">
+          <div class="header my-2">
+            <label class="ngValid-label"><h2>Currency Exchanger</h2></label>
+          </div>
+          <exchanger-card [moreButtonShow]="false" (onFormValueChange)="onFormValueChange($event)" [cAmount]="convertAmount"></exchanger-card>
         </div>
-        <exchanger-card [moreButtonShow]="false" (onFormValueChange)="onFormValueChange($event)" [cAmount]="convertAmount"></exchanger-card>
         <div class="grid-container" *ngIf="popularCurrency && popularCurrency.length > 0">
           <ng-container *ngFor="let currency of popularCurrency; let i = index">
             <div class="grid-item" [id]="currency"><h4>{{ currency }} </h4><h6> {{ (amount &&  popularCurrencyRates && popularCurrencyRates[currency]) ? ((popularCurrencyRates[currency] * amount)  | number: '1.2-2') : "-"}}</h6></div>

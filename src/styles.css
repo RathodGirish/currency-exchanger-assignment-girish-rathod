@@ -219,3 +219,15 @@
 .text-center{
   text-align: center;
 }
+
+.header-div {
+  position: sticky;
+  top: 1px;
+  background-color: #fff;
+}
+
+.header-div-top10 {
+  position: sticky;
+  top: 90px;
+  background-color: #fff;
+}

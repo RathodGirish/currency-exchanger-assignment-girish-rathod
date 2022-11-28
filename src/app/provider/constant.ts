@@ -3,6 +3,7 @@ export const CONSTANT = Object.freeze({
     FAIL: 'Fail',
     CURRENCY_LIST: "currencyList",
     INVALID_FORM: "Required fields are missing",
+    INVALID_AMOUNT: "Amount should be greater than 0",
     DATA_FOUND: "Data found successfully",
     SOMETHING_WENT_WRONG: "Something went wrong",
     SELECT_DIFFERENT_FROM_TO: "Please select different from and to values",

@@ -145,7 +145,9 @@ export class ExchangerCardComponent implements OnInit {
     const formData = this.currencyExchangerForm.value;
     if(this.currencyExchangerForm.invalid){
       this.commonService.showFailNotification(CONSTANT.FAIL, CONSTANT.INVALID_FORM)
-    } else { 
+    } else if(formData && parseInt(formData.amount) == 0){
+      this.commonService.showFailNotification(CONSTANT.FAIL, CONSTANT.INVALID_AMOUNT)
+    }else { 
       if(formData.from === formData.to){
         this.commonService.showFailNotification(CONSTANT.FAIL, CONSTANT.SELECT_DIFFERENT_FROM_TO)
         this.enableMoreButton = false;
@@ -161,8 +163,8 @@ export class ExchangerCardComponent implements OnInit {
                 this.onFormValueChange.emit(formData);
                 this.enableMoreButton = true;
                 
-                this.convertAmount = data.result.toString() + ' ' + formData.to;
-                this.convertRate = this.getConvertedValue(data.info.rate.toString());
+                this.convertAmount = ((parseFloat(data.result).toFixed(2)).toString()) + ' ' + formData.to;
+                this.convertRate = this.getConvertedValue((parseFloat(data.info.rate).toFixed(2)).toString());
               } else {
                 this.commonService.showFailNotification(CONSTANT.FAIL, CONSTANT.SOMETHING_WENT_WRONG)
               }

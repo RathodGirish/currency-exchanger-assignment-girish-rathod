@@ -12,7 +12,7 @@ export class Connector {
     TODO: post interceptor
     */
     Post(URL: any, Parameter: any) {
-        var headers: any = { 'apikey': ENV.API_KEY };
+        let  headers: any = { 'apikey': ENV.API_KEY };
         return this.http.post(URL, Parameter, { headers })
     }
  
@@ -20,7 +20,7 @@ export class Connector {
     TODO: get interceptor
     */
     Get(URL: any) {
-        var headers: any = { 'apikey': ENV.API_KEY };
+        let headers: any = { 'apikey': ENV.API_KEY };
         return this.http.get(URL, { headers })
     }
 }

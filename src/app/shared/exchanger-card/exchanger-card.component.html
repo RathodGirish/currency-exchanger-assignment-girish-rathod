@@ -76,10 +76,10 @@
                     </div>
                     <div class="row m-y-2 content-center">
                         <div class="column-4">
-                            <input type="text" class="box-panel text-center" placeholder="1.00 EUR=XX.XX USD" [value]='getValue()' />
+                            <input type="text" disabled class="box-panel text-center" placeholder="1.00 EUR=XX.XX USD" [value]='getValue()' />
                         </div>
                         <div [ngClass]="!moreButtonShow ? 'column-4' : 'column-8'">
-                            <input type="text" class="box-panel text-center card-height" [ngClass]="moreButtonShow ? 'w-96' : ''"
+                            <input type="text" disabled class="box-panel text-center card-height" [ngClass]="moreButtonShow ? 'w-96' : ''"
                                 placeholder="XX.XX USD" />
                         </div>
                         <div class="column-4" *ngIf="!moreButtonShow">

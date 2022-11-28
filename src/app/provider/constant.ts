@@ -5,7 +5,7 @@ export const CONSTANT = Object.freeze({
     INVALID_FORM: "Required fields are missing",
     DATA_FOUND: "Data found successfully",
     SOMETHING_WENT_WRONG: "Something went wrong",
-
+    SELECT_DIFFERENT_FROM_TO: "Please select different from and to values",
     CURRENCY_SYMBOL_LIST:['EUR','AED','AUD','BTC','CAD','EGP','GBP','INR','SGD'],
 
     CURRENCY_OBJ :{

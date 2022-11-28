@@ -1,5 +1,6 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild, Input } from '@angular/core';
 import Chart from 'chart.js/auto';
+import * as moment from "moment";
 
 @Component({
   selector: 'app-line-chart',
@@ -7,6 +8,7 @@ import Chart from 'chart.js/auto';
   styleUrls: ['./line-chart.component.css'],
 })
 export class LineChartComponent implements AfterViewInit {
+  @Input() chartData:any;
   @ViewChild('lineCanvas') lineCanvas: ElementRef | undefined;
   lineChart: any;
 
@@ -17,22 +19,12 @@ export class LineChartComponent implements AfterViewInit {
   }
 
   lineChartMethod() {
+    let months = this.getMonthYearList(new Date(this.chartData['start_date']),new Date(this.chartData['end_date']))
+    let rateData = this.getRateDataList(months)
     this.lineChart = new Chart(this.lineCanvas?.nativeElement, {
       type: 'line',
       data: {
-        labels: [
-          'January',
-          'February',
-          'March',
-          'April',
-          'May',
-          'June',
-          'July',
-          'August',
-          'September',
-          'November',
-          'December',
-        ],
+        labels: months,
         datasets: [
           {
             label: 'Rate',
@@ -53,11 +45,40 @@ export class LineChartComponent implements AfterViewInit {
             pointHoverBorderWidth: 2,
             pointRadius: 1,
             pointHitRadius: 10,
-            data: [1.65, 2.59, 0.80, 2.81, 1.56, 0.55, 0.40, 0.10, 1.5, 1.50, 2.10, 3.15],
+            data: rateData,
             spanGaps: false,
           },
         ],
       },
     });
   }
+
+  public getMonthYearList(d1:any, d2:any) {
+		let dateStart = moment(d1);
+		let dateEnd = moment(d2);
+		let timeValues = [];
+
+    while (dateEnd > dateStart || dateStart.format('M') === dateEnd.format('M')) {
+			timeValues.push(dateStart.format('MMM-YYYY'));
+			dateStart.add(1,'month');
+		}
+		return timeValues;
+	}
+
+  public getRateDataList(months:any) {
+    let list = months.map((str:any,index:any)=>({'monthYear':str,"rates":[]}));
+    let rateData:any = [];
+    months.forEach((month:any,index:any) => {
+      for(const prop in this.chartData['rates']){
+		    const dateStart = moment(prop);
+        let str = dateStart.format('MMM-YYYY');
+        if(str == month){
+          list[index]['rates'].push(this.chartData['rates'][prop]['EUR'])
+        }
+      }
+      let rateIndex = list[index]['rates'].length - 1;
+      rateData.push(list[index]['rates'][rateIndex])
+    });
+    return rateData;
+	}
 }

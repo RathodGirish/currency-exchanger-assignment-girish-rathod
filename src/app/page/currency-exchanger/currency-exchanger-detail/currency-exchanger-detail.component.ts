@@ -7,9 +7,7 @@ import { CONSTANT } from 'src/app/provider/constant';
 
 interface Chart {
   base:string,
-  rates: {
-    [key: string]: {[key: string]:string}
-  },
+  rates: any,
   end_date: string,
   start_date:string,
   success:boolean,
@@ -27,8 +25,8 @@ export class CurrencyExchangerDetailComponent implements OnInit {
   public to: string ='';
   public chartData: Chart = {
     base: '',
-    rates: {},
     end_date: '',
+    rates: {},
     start_date: '',
     success: false,
     timeseries: false
@@ -62,10 +60,11 @@ export class CurrencyExchangerDetailComponent implements OnInit {
     }
 
     try{
+      
       this.currencyExchangerService.getChartData(obj).subscribe(
         (data: any) => {
           if (data && data.success === true) {
-            this.chartData = {...data}
+            this.chartData = data
           } else {
             this.commonService.showFailNotification(CONSTANT.FAIL, CONSTANT.SOMETHING_WENT_WRONG)
           }

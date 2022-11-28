@@ -14,6 +14,9 @@ export class ExchangerCardComponent implements OnInit {
   @Output() onFormValueChange = new EventEmitter();
   @Input() moreButtonShow: boolean = false;
   @Input() cAmount: string = '';
+  @Input() fromValue: string = '';
+  @Input() toValue: string = '';
+  @Input() amountValue: number = 0;
 
   public currencyList: any[] = []
   public submitted: boolean = false;
@@ -21,7 +24,7 @@ export class ExchangerCardComponent implements OnInit {
   public convertAmount: string = "";
   public convertRate: string = "";
   public isDetailScreen: boolean = false;
-  currencyExchangerForm: FormGroup = new FormGroup({});
+  public currencyExchangerForm: FormGroup = new FormGroup({});
 
   constructor(
     private fb: FormBuilder,
@@ -75,9 +78,9 @@ export class ExchangerCardComponent implements OnInit {
   */
   public createForm() : void {
     this.currencyExchangerForm = this.fb.group({
-      amount: ['1', Validators.required],
-      from: [{value: 'EUR', disabled: (this.moreButtonShow)? true : false}, Validators.required],
-      to: ['USD', Validators.required]
+      amount: [this.amountValue || '1', Validators.required],
+      from: [{value: this.fromValue || 'EUR', disabled: (this.moreButtonShow)? true : false}, Validators.required],
+      to: [this.toValue || 'USD', Validators.required]
     });
   }
   get frm() { return this.currencyExchangerForm.controls; }
@@ -132,16 +135,13 @@ export class ExchangerCardComponent implements OnInit {
         this.convertRate = '';
         this.convertAmount = '';
         try{
-         
+          
           this.currencyExchangerService.convertCurrency(formData).subscribe(
             (data: any) => {
               if (data && data.success === true) {
                 this.onFormValueChange.emit(formData);
                 this.enableMoreButton = true;
-                let obj = {
-                  "base":formData.to,
-                  "symbols":CONSTANT.CURRENCY_SYMBOL_LIST.toString()
-                }
+                
                 this.convertAmount = data.result.toString() + ' ' + formData.to;
                 this.convertRate = this.getConvertedValue(data.info.rate.toString());
               } else {

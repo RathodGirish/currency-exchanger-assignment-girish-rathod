@@ -18,6 +18,7 @@ export class ExchangerCardComponent implements OnInit {
   @Input() to: string = '';
   @Input() amount: number = 0;
 
+  public isAPICalling: boolean = false;
   public currencyList: any[] = []
   public submitted: boolean = false;
   public enableMoreButton: boolean = false;
@@ -152,9 +153,10 @@ export class ExchangerCardComponent implements OnInit {
         this.convertRate = '';
         this.convertAmount = '';
         try{
-          
+          this.isAPICalling = true;
           this.currencyExchangerService.convertCurrency(formData).subscribe(
             (data: any) => {
+              this.isAPICalling = false;
               if (data && data.success === true) {
                 this.onFormValueChange.emit(formData);
                 this.enableMoreButton = true;
@@ -170,6 +172,7 @@ export class ExchangerCardComponent implements OnInit {
             }
           )
         } catch(e) {
+          this.isAPICalling = false;
           this.commonService.showFailNotification(CONSTANT.FAIL, e)
         }
       }

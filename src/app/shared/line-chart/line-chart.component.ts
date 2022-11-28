@@ -3,7 +3,6 @@ import Chart from 'chart.js/auto';
 import { CommonService} from "../../services/index"
 import * as moment from "moment";
 
-
 interface ChartObj {
   monthYear:string,
   rates: string[]
@@ -17,7 +16,6 @@ interface ChartData {
   success: boolean;
   timeseries: boolean;
 }
-
 
 @Component({
   selector: 'app-line-chart',

@@ -69,7 +69,7 @@
                         <div class="column-4"></div>
                         <div class="column-8">
                             <div class="row p-x-3">
-                                <button type="button" class="button-blue w-97 m-y-10 cursor-pointer" [disabled]="currencyExchangerForm.invalid" (click)="onConvertButtonClick()">Convert</button>
+                                <button type="button" class="button-blue w-97 m-y-10 cursor-pointer" [disabled]="currencyExchangerForm.invalid || isAPICalling" (click)="onConvertButtonClick()">Convert</button>
                             </div>
                         </div>
                     </div>
@@ -81,7 +81,7 @@
                             <input type="text" class="box-panel text-center card-height" [ngClass]="moreButtonShow ? 'w-96' : ''" placeholder="XX.XX USD" disabled [value]='convertAmount' />
                         </div>
                         <div class="column-4" *ngIf="!moreButtonShow">
-                            <button class="button-blue w-94 m-y-10 cursor-pointer" [disabled]="currencyExchangerForm.invalid || !enableMoreButton" (click)="onMoreDetailButtonClick()">
+                            <button class="button-blue w-94 m-y-10 cursor-pointer" [disabled]="currencyExchangerForm.invalid || !enableMoreButton || isAPICalling" (click)="onMoreDetailButtonClick()">
                                 More Details
                             </button>
                         </div>

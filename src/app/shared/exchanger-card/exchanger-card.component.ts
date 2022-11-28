@@ -111,15 +111,33 @@ export class ExchangerCardComponent implements OnInit {
   */
   public onConvertButtonClick = () => {
     const formmData = this.currencyExchangerForm.value;
-    this.currencyExchangerService.convertCurrency(formmData).subscribe(
-      (async (data: any) => {
-        if (data && data.success === true) {
-          this.onFormValueChange.emit(formmData);
-          this.enableMoreButton = true;
-        } else {
-          this.commonService.showFailNotification(CONSTANT.FAIL, CONSTANT.SOMETHING_WENT_WRONG)
-        }
-      })
-    )
+    if(formmData.from === formmData.to){
+      this.commonService.showFailNotification(CONSTANT.FAIL, CONSTANT.SELECT_DIFFERENT_FROM_TO)
+      this.enableMoreButton = false;
+    } else {
+      this.currencyExchangerService.convertCurrency(formmData).subscribe(
+        (async (data: any) => {
+          if (data && data.success === true) {
+            this.onFormValueChange.emit(formmData);
+            this.enableMoreButton = true;
+            let obj = {
+              "base":formmData.to,
+              "symbols":CONSTANT.CURRENCY_SYMBOL_LIST.toString()
+            }
+            this.currencyExchangerService.getLatestSymbols(obj).subscribe(
+              (async (data: any) => {
+                if (data && data.success === true) {
+                  this.convertAmount = data.result;
+                 } else {
+                  this.commonService.showFailNotification(CONSTANT.FAIL, CONSTANT.SOMETHING_WENT_WRONG)
+                }
+               })
+             )
+          } else {
+            this.commonService.showFailNotification(CONSTANT.FAIL, CONSTANT.SOMETHING_WENT_WRONG)
+          }
+        })
+      )
+    }
   }
 }

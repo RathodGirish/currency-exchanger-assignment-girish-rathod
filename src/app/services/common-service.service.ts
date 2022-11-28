@@ -27,8 +27,8 @@ export class CommonService {
   TODO: get currency array from local storage
   */
   public getCurrencyFromLocal(callback: any) {
-    var val: any = localStorage.getItem(CONSTANT.CURRENCY_LIST);
-    var data = JSON.parse(val);
+    let val: any = localStorage.getItem(CONSTANT.CURRENCY_LIST);
+    let data = JSON.parse(val);
     callback(data);
   };
 

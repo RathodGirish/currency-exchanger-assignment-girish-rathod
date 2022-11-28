@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { CurrencyExchangerService, CommonService } from '../../../services/index';
 import * as moment from 'moment' 
@@ -13,22 +14,25 @@ export class CurrencyExchangerDetailComponent implements OnInit {
  public amount: number = 0;
  public from: string ='';
  public to: string ='';
- public chartObj: any = {};
-
+ public chartData: any;
+ public currencyList: any[] = []
+ public currencyName:any = "";
   constructor(
     private route: ActivatedRoute,
+    public commonService: CommonService,
     public currencyExchangerService:CurrencyExchangerService,
-    public commonService:CommonService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
+    this.chartData = CONSTANT.CHART_OBJ;
     this.route.params.subscribe(params => {
       this.amount = params['amount'];
       this.from = params['from'];
       this.to = params['to'];
-			console.log("params", params)
 		});
     this.fetchChartData()
+    this.currentCurrencyName();
   }
 
   public fetchChartData = () => {
@@ -42,12 +46,23 @@ export class CurrencyExchangerDetailComponent implements OnInit {
     this.currencyExchangerService.getChartData(obj).subscribe(
       (data: any) => {
         if (data && data.success === true) {
-          this.chartObj = {...data}
+          this.chartData = {...data}
         } else {
           this.commonService.showFailNotification(CONSTANT.FAIL, CONSTANT.SOMETHING_WENT_WRONG)
         }
       }
     )
   }
+  
+  public currentCurrencyName () {
+    this.commonService.getCurrencyFromLocal((data: any) => {
+      this.currencyList = [...data]
+      let obj = this.currencyList.find((a:any) => a.key == this.from)
+      if(obj) this.currencyName = obj['value'];
+    })
+  }
 
+  public onGoToHomeClick = () => {
+    this.router.navigate([`/currency-exchanger/home`]);
+  }
 }
